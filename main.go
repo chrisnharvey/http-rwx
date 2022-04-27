@@ -82,21 +82,25 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go executeCommand()
+
+	fmt.Println("Responding with 200 OK")
+	w.WriteHeader(200)
+}
+
+func executeCommand() {
 	fmt.Println("Executing command: ", *cmd)
 
-	err = exec.Command("/bin/sh", "-c", *cmd).Run()
+	err := exec.Command("/bin/sh", "-c", *cmd).Run()
 
 	if err != nil {
 		fmt.Println("Command execution failed")
 		fmt.Println(err)
-		w.WriteHeader(500)
 
 		return
 	}
 
 	fmt.Println("Command executed")
-
-	w.WriteHeader(200)
 }
 
 func writeConfig(values url.Values) error {
